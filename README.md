@@ -111,3 +111,19 @@ All available at [pypi.org/user/gmahia](https://pypi.org/user/gmahia/):
 - `kilimo-mcp` — agricultural coordination (consumes drought + price events)
 - `afya-mcp` — health coordination (consumes drought + flood + disease events)
 - `mpesa-mcp` — M-Pesa payments (handles insurance payouts)
+
+## Integration with wapimaji-mcp
+
+`wapimaji-mcp` v0.1.3+ includes built-in coordination publishing. When drought phase ≥ 2 (Stressed), it automatically fires coordination events:
+
+```python
+# wapimaji-mcp now exposes this MCP tool:
+result = call_mcp_tool("publish_drought_coordination", {
+    "county": "Turkana",
+    "phase": 3,
+    "rainfall_deficit_pct": 42.0
+})
+# → fires 5 downstream actions automatically via africa-coord-bus
+```
+
+See [examples/wapimaji_drought_cascade.py](examples/wapimaji_drought_cascade.py) for the complete integration.

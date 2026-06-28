@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "africa-coord-bus"
+version = "0.1.0"
+description = "Coordination event bus connecting East Africa MCP servers — drought alerts cascade to insurance, health, and agricultural advisory in real time"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+keywords = ["mcp","africa","coordination","event-bus","east-africa","drought","health","kenya"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/gabrielmahia/africa-coord-bus"
+Repository = "https://github.com/gabrielmahia/africa-coord-bus"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/africa_coord_bus"]

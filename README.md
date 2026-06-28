@@ -1,2 +1,113 @@
 # africa-coord-bus
-Coordination event bus connecting MCP servers for East Africa — drought alerts, health cascades, agricultural advisories. The missing layer between 31 isolated tools.
+
+**The coordination layer between East Africa's AI tools.**
+
+31 MCP servers exist for Kenya's coordination domains — payments, water, agriculture, health, land, education. They work in isolation. When `wapimaji-mcp` detects a drought six weeks in advance, `bima-mcp` doesn't know to evaluate parametric insurance payouts. `afya-mcp` doesn't know to activate malnutrition surveillance. `kilimo-mcp` doesn't know to issue drought-resistant crop advisories.
+
+This package provides the event bus that connects them.
+
+## The coordination gap
+
+A smallholder farmer in Turkana has parametric crop insurance. NDVI anomaly data shows drought coming 6 weeks out. The insurance contract says coverage triggers when SPI drops below -1.5.
+
+Without coordination: the farmer finds out the crop is failing at harvest. The insurance company finds out at claims submission. The health system finds out at clinic presentation.
+
+With coordination:
+
+```
+wapimaji-mcp → CoordinationEvent(drought_alert, ALERT)
+    │
+    ├── bima-mcp.evaluate_parametric_payout      (triggered immediately)
+    ├── kilimo-mcp.issue_drought_advisory         (farmers receive SMS)
+    ├── afya-mcp.activate_malnutrition_watch      (CHWs briefed)
+    └── county-mcp.alert_county_health            (county notified)
+```
+
+Six weeks earlier. Before the damage is visible.
+
+## Install
+
+```bash
+pip install africa-coord-bus
+```
+
+## Usage
+
+```python
+from africa_coord_bus import (
+    EventBus, CoordinationEvent, DomainCascade,
+    EventDomain, EventSeverity, KenyaLocation
+)
+
+# Create bus with offline queue
+bus = EventBus(queue_path="/var/coord-bus/queue.jsonl")
+
+# Wire all domain cascade handlers
+cascade = DomainCascade(bus)
+cascade.wire_all()
+
+# Publish a drought signal from wapimaji-mcp
+event = CoordinationEvent(
+    domain=EventDomain.WATER,
+    event_type="drought_alert",
+    source="wapimaji-mcp",
+    severity=EventSeverity.ALERT,
+    location=KenyaLocation(county="Turkana", county_code=23),
+    data={
+        "ndvi_anomaly": -0.28,
+        "spi_3month": -1.8,
+        "rainfall_deficit_pct": 42,
+    },
+)
+
+targets = bus.publish(event)
+# → [WATER→FINANCE] bima-mcp.evaluate_parametric_payout | Turkana | drought_alert | alert
+# → [WATER→AGRI]    kilimo-mcp.issue_drought_advisory    | Turkana | drought_alert | alert
+# → [WATER→HEALTH]  afya-mcp.activate_malnutrition_watch | Turkana | drought_alert | alert
+```
+
+## Built-in routing rules
+
+| Trigger | Cascade |
+|---------|---------|
+| `water.drought_alert` (WARNING+) | `bima-mcp.evaluate_parametric_payout`, `kilimo-mcp.issue_drought_advisory`, `soko-mcp.price_alert` |
+| `water.drought_alert` (ALERT+) | + `afya-mcp.activate_malnutrition_watch`, `county-mcp.alert_county_health` |
+| `health.disease_outbreak` (cholera/typhoid) | `wapimaji-mcp.flag_water_risk` |
+| `health.disease_outbreak` (WARNING+) | `county-mcp.health_alert`, `fomu-mcp.emergency_procurement` |
+| `agriculture.price_spike` (>30% above seasonal) | `afya-mcp.food_security_watch`, `bima-mcp.food_security_eval` |
+| `water.flood_alert` (WARNING+) | `afya-mcp.waterborne_watch`, `county-mcp.flood_response` |
+
+Add custom rules:
+
+```python
+from africa_coord_bus import RoutingRule, EventDomain, EventSeverity
+
+bus.routing.add(RoutingRule(
+    name="outbreak→emergency_procurement",
+    description="Disease outbreak triggers essential medicine procurement",
+    trigger_domain=EventDomain.HEALTH,
+    trigger_event_type="disease_outbreak",
+    trigger_min_severity=EventSeverity.ALERT,
+    target_actions=["fomu-mcp.emergency_medicine_order"],
+))
+```
+
+## Offline-first
+
+Events are written to a local queue before dispatch. If dispatch fails, events persist for replay:
+
+```python
+bus = EventBus(queue_path="/var/coord-bus/events.jsonl")
+# ... system restart ...
+bus.replay_queue()  # processes all unhandled events
+```
+
+## Related packages
+
+All available at [pypi.org/user/gmahia](https://pypi.org/user/gmahia/):
+
+- `wapimaji-mcp` — drought intelligence (publishes `water.drought_alert`)
+- `bima-mcp` — parametric insurance (consumes drought events)
+- `kilimo-mcp` — agricultural coordination (consumes drought + price events)
+- `afya-mcp` — health coordination (consumes drought + flood + disease events)
+- `mpesa-mcp` — M-Pesa payments (handles insurance payouts)

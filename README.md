@@ -25,6 +25,20 @@ wapimaji-mcp → CoordinationEvent(drought_alert, ALERT)
 
 Six weeks earlier. Before the damage is visible.
 
+
+## AI Agent Compatibility
+
+Model-agnostic. Tested with:
+
+| Model | Notes |
+|-------|-------|
+| `claude-sonnet-5` | **Recommended** — completes drought→insurance→county cascades end-to-end |
+| `claude-opus-4-8` | Highest accuracy for complex multi-domain triage |
+| `gemini-flash` | High-volume, cost-sensitive routing |
+
+Sonnet 5 (2026-06-30) is the first Sonnet-class model that reliably
+finishes the full multi-server cascade without stopping mid-chain.
+
 ## Install
 
 ```bash

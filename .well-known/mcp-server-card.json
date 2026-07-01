@@ -1,0 +1,28 @@
+{
+  "schema_version": "2026-mcp-server-card-draft-1",
+  "name": "africa-coord-bus",
+  "description": "Coordination event bus for 32 East Africa MCP servers. Drought\u2192insurance\u2192county cascades.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/gabrielmahia/africa-coord-bus",
+  "pypi": "https://pypi.org/project/africa-coord-bus/",
+  "tested_models": [
+    "claude-sonnet-5"
+  ],
+  "domains": [
+    "coordination",
+    "multi-agent",
+    "kenya",
+    "east-africa"
+  ],
+  "transport": [
+    "stdio"
+  ],
+  "auth": "none-required",
+  "languages": [
+    "en",
+    "sw"
+  ],
+  "security_contact": "security@mngonline.dev",
+  "license": "MIT",
+  "architecture": "shared-context-store-compatible"
+}

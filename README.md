@@ -39,6 +39,27 @@ Model-agnostic. Tested with:
 Sonnet 5 (2026-06-30) is the first Sonnet-class model that reliably
 finishes the full multi-server cascade without stopping mid-chain.
 
+
+## Architecture: Shared Context Store (CA-MCP)
+
+**Research validation:** *Enhancing MCP with Context-Aware Server Collaboration*
+(arXiv:2601.11595, January 2026) — introduces **CA-MCP**, adding a Shared Context
+Store (SCS) to stateless MCP. Results:
+
+- Statistically significant reduction in **LLM calls** for complex multi-server tasks
+- Decreased **response failures** when task conditions are not immediately satisfied
+- Validated on TravelPlanner and REALM-Bench benchmarks
+
+`africa-coord-bus` implements a compatible event-driven shared context pattern:
+the coordination bus acts as the SCS for cross-domain cascades. A drought event
+from `wapimaji-mcp` propagates context (severity, county, affected area) to
+`bima-mcp`, `kilimo-mcp`, and `county-mcp` without each server re-establishing
+that context independently.
+
+**The disconnected models problem** (Krishnan, arXiv:2504.21030): stateless MCP
+servers lack global context — making coordination buses like this one structurally
+necessary, not optional, for multi-domain agents in East Africa.
+
 ## Install
 
 ```bash

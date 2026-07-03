@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Callable
 
-from .event import CoordinationEvent, EventDomain, EventSeverity
+from .event import CoordinationEvent, EventDomain
 from .bus import EventBus
 
 

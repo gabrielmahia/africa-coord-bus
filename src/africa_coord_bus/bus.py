@@ -16,7 +16,6 @@ from __future__ import annotations
 import json
 import pathlib
 import threading
-import time
 from collections import defaultdict
 from typing import Callable
 

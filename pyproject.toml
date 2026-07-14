@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "africa-coord-bus"
-version = "0.1.0"
+version = "0.2.0"
 description = "Coordination event bus connecting East Africa MCP servers — drought alerts cascade to insurance, health, and agricultural advisory in real time"
 readme = "README.md"
 requires-python = ">=3.10"

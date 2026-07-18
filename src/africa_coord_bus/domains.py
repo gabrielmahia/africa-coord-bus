@@ -38,7 +38,7 @@ class DomainCascade:
 
     @staticmethod
     def _default_handler(action: str, event: CoordinationEvent) -> None:
-        county = event.location.county or "unknown county"
+        county = event.location.admin_1 or "unknown area"
         print(f"  [{event.domain.value.upper()}→{action.split('.')[0].upper()}] "
               f"{action} | {county} | {event.event_type} | {event.severity.value}")
 

@@ -40,16 +40,17 @@ WHAT THE PORT REVEALED (honest findings, see docs/PORTING_GUIDE.md)
   someone actually ports, which is the entire argument for doing a second country
   before calling the pattern a standard.
 
-  Deliberately NOT fixed here: renaming the type would break every existing
-  consumer, and this table must not regress a working system. The correct fix is
-  a backwards-compatible `SubnationalLocation` with `KenyaLocation` retained as
-  an alias — proposed, not imposed, and tracked in the Gap Register. Tanzania
-  rules therefore carry location in `event.data` until that lands.
+  FIXED in v0.3.0: `SubnationalLocation` (country-neutral, two admin levels)
+  now ships alongside an unchanged `KenyaLocation`; both expose the shared
+  accessors (.country/.admin_1/.admin_2) so every existing consumer keeps
+  working. Tanzania producers should use
+  `SubnationalLocation.tanzania(region=..., district=...)`. The event.data
+  workaround remains valid but is no longer necessary. (Gap Register G10.)
 """
 
 from __future__ import annotations
 
-from .event import CoordinationEvent, EventDomain, EventSeverity
+from .event import EventDomain, EventSeverity
 from .routing import RoutingRule
 
 # ── Tanzania coordination routing table ───────────────────────────────

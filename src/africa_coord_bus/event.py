@@ -32,13 +32,82 @@ class EventDomain(str, Enum):
 
 
 @dataclass
+class SubnationalLocation:
+    """Country-neutral subnational location (G10 fix, v0.3.0).
+
+    Two generic admin levels cover the region's structures: county/sub-county
+    (KE), mkoa/wilaya (TZ), district/county (UG), province/district (RW).
+    `country` is ISO 3166-1 alpha-2. Kenya-compatible read accessors are
+    provided so existing consumers written against `.county` keep working
+    whichever type flows through the bus.
+    """
+    country: str = ""
+    admin_1: str = ""
+    admin_1_code: int = 0
+    admin_2: str = ""
+    lat: float = 0.0
+    lon: float = 0.0
+
+    # Kenya-era compatibility accessors (read-only)
+    @property
+    def county(self) -> str:
+        return self.admin_1
+
+    @property
+    def county_code(self) -> int:
+        return self.admin_1_code
+
+    @property
+    def sub_county(self) -> str:
+        return self.admin_2
+
+    @classmethod
+    def tanzania(cls, region: str = "", district: str = "",
+                 lat: float = 0.0, lon: float = 0.0) -> "SubnationalLocation":
+        """Convenience: mkoa (region) / wilaya (district)."""
+        return cls(country="TZ", admin_1=region, admin_2=district, lat=lat, lon=lon)
+
+    def to_dict(self) -> dict:
+        return {k: v for k, v in self.__dict__.items() if v}
+
+
+@dataclass
 class KenyaLocation:
-    """Kenya-specific location with county code (1-47)."""
+    """Kenya-specific location with county code (1-47).
+
+    Retained unchanged for backwards compatibility (see tanzania.py port
+    notes / Gap Register G10). New country-neutral producers should prefer
+    SubnationalLocation; consumers can rely on the shared accessors
+    (.admin_1/.admin_2/.country) present on both types.
+    """
     county: str = ""
     county_code: int = 0
     sub_county: str = ""
     lat: float = 0.0
     lon: float = 0.0
+
+    # Forward-compatibility accessors mirroring SubnationalLocation
+    @property
+    def country(self) -> str:
+        return "KE"
+
+    @property
+    def admin_1(self) -> str:
+        return self.county
+
+    @property
+    def admin_1_code(self) -> int:
+        return self.county_code
+
+    @property
+    def admin_2(self) -> str:
+        return self.sub_county
+
+    def to_subnational(self) -> SubnationalLocation:
+        return SubnationalLocation(country="KE", admin_1=self.county,
+                                   admin_1_code=self.county_code,
+                                   admin_2=self.sub_county,
+                                   lat=self.lat, lon=self.lon)
 
     def to_dict(self) -> dict:
         return {k: v for k, v in self.__dict__.items() if v}
@@ -71,7 +140,7 @@ class CoordinationEvent:
     domain:             EventDomain
     event_type:         str
     source:             str
-    location:           KenyaLocation = field(default_factory=KenyaLocation)
+    location:           KenyaLocation | SubnationalLocation = field(default_factory=KenyaLocation)
     severity:           EventSeverity  = EventSeverity.INFO
     data:               dict[str, Any] = field(default_factory=dict)
     cross_domain_refs:  list[str]      = field(default_factory=list)
@@ -100,8 +169,13 @@ class CoordinationEvent:
     @classmethod
     def from_dict(cls, d: dict) -> "CoordinationEvent":
         loc_data = d.get("location", {})
-        loc = KenyaLocation(**{k: v for k, v in loc_data.items()
-                                if k in KenyaLocation.__dataclass_fields__})
+        loc: KenyaLocation | SubnationalLocation
+        if "admin_1" in loc_data or "country" in loc_data:
+            loc = SubnationalLocation(**{k: v for k, v in loc_data.items()
+                                         if k in SubnationalLocation.__dataclass_fields__})
+        else:  # legacy shape (county/county_code/sub_county) or empty
+            loc = KenyaLocation(**{k: v for k, v in loc_data.items()
+                                    if k in KenyaLocation.__dataclass_fields__})
         return cls(
             domain=EventDomain(d["domain"]),
             event_type=d["event_type"],

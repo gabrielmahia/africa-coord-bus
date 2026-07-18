@@ -37,7 +37,7 @@ class EventBus:
         @bus.subscribe(EventDomain.AGRICULTURE)
         def handle_crop_advisory(event, targets):
             for t in targets:
-                print(f"  → {t}: county={event.location.county}")
+                print(f"  → {t}: {event.location.country or 'KE'}/{event.location.admin_1}")
 
         # Publish a drought event from wapimaji-mcp
         bus.publish(CoordinationEvent(

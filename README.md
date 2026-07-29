@@ -177,3 +177,14 @@ MIT licensed. Feedback via GitHub Issues only — pull requests are not accepted
 
 Model-agnostic by design: closed APIs, open-weight models, and small distilled models are all first-class citizens.
 <!-- /interconnect:v1 -->
+
+## Interoperability: CAP 1.2 export
+
+Events can be emitted as OASIS **Common Alerting Protocol (CAP) 1.2** so a county, ministry, or warning network can consume them with existing tools — no need to adopt this bus:
+
+```python
+from africa_coord_bus import CoordinationEvent, to_cap_xml
+xml = to_cap_xml(event)   # valid CAP 1.2; also to_cap_dict(event)
+```
+
+Trust integrity is preserved: a DEMO/synthetic event is emitted as `status=Exercise`, never `Actual`, so a test signal cannot be mistaken for a live public alert.

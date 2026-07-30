@@ -177,3 +177,52 @@ MIT licensed. Feedback via GitHub Issues only — pull requests are not accepted
 
 Model-agnostic by design: closed APIs, open-weight models, and small distilled models are all first-class citizens.
 <!-- /interconnect:v1 -->
+
+## Interoperability: CAP 1.2 export
+
+Events can be emitted as OASIS **Common Alerting Protocol (CAP) 1.2** so a county, ministry, or warning network can consume them with existing tools — no need to adopt this bus:
+
+```python
+from africa_coord_bus import CoordinationEvent, to_cap_xml
+xml = to_cap_xml(event)   # valid CAP 1.2; also to_cap_dict(event)
+```
+
+Trust integrity is preserved: a DEMO/synthetic event is emitted as `status=Exercise`, never `Actual`, so a test signal cannot be mistaken for a live public alert.
+
+## Offline sync: conflict-free queue merge (CRDT)
+
+Events are immutable and uuid-keyed, so two offline queues reconcile by union —
+a grow-only set (G-Set), the simplest CRDT. `merge_queues` is idempotent,
+commutative, and associative, so devices sync in any order and replay is safe:
+
+```python
+from africa_coord_bus import merge_queues, write_queue
+merged = merge_queues("device_a/queue.jsonl", "device_b/queue.jsonl")  # deduped by event_id
+write_queue(merged, "synced/queue.jsonl")
+```
+
+## Humanitarian interop: HXL + IPC hint
+
+```python
+from africa_coord_bus import to_hxl_row, ipc_severity_hint
+to_hxl_row(event)          # HXL-tagged row for HDX / HXL Proxy tooling
+ipc_severity_hint(event)   # coarse IPC-phase HINT (food-security domains) — NOT an IPC classification
+```
+The IPC helper is a legibility hint only; its caveat is embedded in the return
+value and it never assigns Phase 5 (Famine), which is a formal analytical act.
+
+## Provenance: trust integrity as a declared field
+
+Every event declares its reality and epistemic confidence, so downstream systems
+never have to guess:
+
+```python
+from africa_coord_bus import CoordinationEvent, EventReality, EventConfidence
+CoordinationEvent(..., reality=EventReality.DEMO, confidence=EventConfidence.PROBABLE)
+```
+
+- `reality` (REAL | DEMO) — a DEMO event can never export as a live CAP alert
+  (`status=Exercise`), declared not string-sniffed. Default REAL.
+- `confidence` (CONFIRMED | PROBABLE | SPECULATIVE | UNKNOWN) — the epistemic
+  ladder; flows into CAP `certainty` (Observed/Likely/Possible/Unknown). Default
+  UNKNOWN — undeclared confidence is never assumed.

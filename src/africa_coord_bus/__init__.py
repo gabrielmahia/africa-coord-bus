@@ -1,5 +1,5 @@
 """africa-coord-bus — Coordination event bus for East Africa MCP infrastructure."""
-__version__ = "0.2.0"
+__version__ = "0.4.0"
 
 from .event import CoordinationEvent, EventSeverity, EventDomain, KenyaLocation, SubnationalLocation, EventReality, EventConfidence
 from .bus import EventBus

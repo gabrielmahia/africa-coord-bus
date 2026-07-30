@@ -31,6 +31,32 @@ class EventDomain(str, Enum):
     CIVIC        = "civic"
 
 
+class EventReality(str, Enum):
+    """Is this a real signal or synthetic/demo data?
+
+    Trust integrity made structural: instead of sniffing a "DEMO —" prefix out
+    of a free-text field, producers declare reality explicitly. Default is REAL
+    because a live coordination fabric that silently defaulted to DEMO would have
+    its genuine alerts marked as exercises and ignored — the dangerous failure.
+    The contract is therefore: synthetic *generators* must set DEMO.
+    """
+    REAL = "real"
+    DEMO = "demo"
+
+
+class EventConfidence(str, Enum):
+    """Epistemic status of the signal — the Confirmed/Probable/Speculative ladder.
+
+    Default is UNKNOWN, not PROBABLE: undeclared confidence is unknown, never
+    assumed. Downstream consumers (and the CAP exporter's certainty field) read
+    this to decide how hard to act on a signal.
+    """
+    CONFIRMED   = "confirmed"
+    PROBABLE    = "probable"
+    SPECULATIVE = "speculative"
+    UNKNOWN     = "unknown"
+
+
 @dataclass
 class SubnationalLocation:
     """Country-neutral subnational location (G10 fix, v0.3.0).
@@ -145,6 +171,9 @@ class CoordinationEvent:
     data:               dict[str, Any] = field(default_factory=dict)
     cross_domain_refs:  list[str]      = field(default_factory=list)
     privacy_level:      str            = "aggregate"
+    reality:            EventReality    = EventReality.REAL
+    confidence:         EventConfidence = EventConfidence.UNKNOWN
+    basis:              str            = ""   # optional: observed | derived | modeled | reported
     requires_action:    bool           = False
     event_id:           str            = field(default_factory=lambda: str(uuid.uuid4()))
     timestamp:          str            = field(
@@ -163,6 +192,9 @@ class CoordinationEvent:
             "data":              self.data,
             "cross_domain_refs": self.cross_domain_refs,
             "privacy_level":     self.privacy_level,
+            "reality":           self.reality.value if isinstance(self.reality, EventReality) else self.reality,
+            "confidence":        self.confidence.value if isinstance(self.confidence, EventConfidence) else self.confidence,
+            "basis":             self.basis,
             "requires_action":   self.requires_action,
         }
 
@@ -185,6 +217,12 @@ class CoordinationEvent:
             data=d.get("data", {}),
             cross_domain_refs=d.get("cross_domain_refs", []),
             privacy_level=d.get("privacy_level", "aggregate"),
+            # backward-compat: legacy records without provenance default to
+            # REAL / UNKNOWN (a pre-provenance event is a real signal of unknown
+            # declared confidence — never silently downgraded to DEMO).
+            reality=EventReality(d.get("reality", "real")),
+            confidence=EventConfidence(d.get("confidence", "unknown")),
+            basis=d.get("basis", ""),
             requires_action=d.get("requires_action", False),
             event_id=d.get("event_id", str(uuid.uuid4())),
             timestamp=d.get("timestamp", datetime.now(timezone.utc).isoformat()),

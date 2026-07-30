@@ -1,7 +1,7 @@
 """africa-coord-bus — Coordination event bus for East Africa MCP infrastructure."""
 __version__ = "0.2.0"
 
-from .event import CoordinationEvent, EventSeverity, EventDomain, KenyaLocation, SubnationalLocation
+from .event import CoordinationEvent, EventSeverity, EventDomain, KenyaLocation, SubnationalLocation, EventReality, EventConfidence
 from .bus import EventBus
 from .routing import RoutingRules, KENYA_ROUTING_TABLE, RoutingRule
 from .domains import DomainCascade
@@ -15,6 +15,7 @@ __all__ = [
     "PORTABLE_PATTERNS",
     "tanzania_rules",
     "CoordinationEvent", "EventSeverity", "EventDomain", "KenyaLocation", "SubnationalLocation",
+    "EventReality", "EventConfidence",
     "EventBus", "RoutingRules", "KENYA_ROUTING_TABLE", "RoutingRule", "DomainCascade",
     "to_cap_xml", "to_cap_dict",
     "to_hxl_row", "hxl_header", "ipc_severity_hint",

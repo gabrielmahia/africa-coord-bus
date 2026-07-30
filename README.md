@@ -210,3 +210,19 @@ ipc_severity_hint(event)   # coarse IPC-phase HINT (food-security domains) — N
 ```
 The IPC helper is a legibility hint only; its caveat is embedded in the return
 value and it never assigns Phase 5 (Famine), which is a formal analytical act.
+
+## Provenance: trust integrity as a declared field
+
+Every event declares its reality and epistemic confidence, so downstream systems
+never have to guess:
+
+```python
+from africa_coord_bus import CoordinationEvent, EventReality, EventConfidence
+CoordinationEvent(..., reality=EventReality.DEMO, confidence=EventConfidence.PROBABLE)
+```
+
+- `reality` (REAL | DEMO) — a DEMO event can never export as a live CAP alert
+  (`status=Exercise`), declared not string-sniffed. Default REAL.
+- `confidence` (CONFIRMED | PROBABLE | SPECULATIVE | UNKNOWN) — the epistemic
+  ladder; flows into CAP `certainty` (Observed/Likely/Possible/Unknown). Default
+  UNKNOWN — undeclared confidence is never assumed.

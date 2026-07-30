@@ -22,7 +22,17 @@ from __future__ import annotations
 
 from xml.etree import ElementTree as ET
 
-from .event import CoordinationEvent, EventDomain, EventSeverity
+from .event import (
+    CoordinationEvent, EventDomain, EventSeverity, EventReality, EventConfidence,
+)
+
+# EventConfidence -> CAP <certainty> (Observed|Likely|Possible|Unlikely|Unknown)
+_CERTAINTY = {
+    EventConfidence.CONFIRMED: "Observed",
+    EventConfidence.PROBABLE: "Likely",
+    EventConfidence.SPECULATIVE: "Possible",
+    EventConfidence.UNKNOWN: "Unknown",
+}
 
 CAP_NS = "urn:oasis:names:tc:emergency:cap:1.2"
 
@@ -61,6 +71,11 @@ def _is_demo(event: CoordinationEvent) -> bool:
     Honours the ``"source": "DEMO — ..."`` convention and any ``demo``/
     ``synthetic`` flag in ``data``, plus a demo marker in the top-level source.
     """
+    # Primary: the declared provenance field (reliable, not string-sniffed).
+    r = getattr(event, "reality", EventReality.REAL)
+    if (r.value if isinstance(r, EventReality) else r) == "demo":
+        return True
+    # Fallbacks for events produced before provenance was declared.
     src = (event.data.get("source") or "") if isinstance(event.data, dict) else ""
     if isinstance(src, str) and src.strip().upper().startswith("DEMO"):
         return True
@@ -108,7 +123,9 @@ def to_cap_dict(event: CoordinationEvent) -> dict:
             "event": event.event_type,
             "urgency": _URGENCY[sev],
             "severity": _SEVERITY[sev],
-            "certainty": "Likely",          # conservative default; sensors may override upstream
+            "certainty": _CERTAINTY.get(
+                event.confidence if isinstance(event.confidence, EventConfidence)
+                else EventConfidence(event.confidence), "Unknown"),
             "senderName": event.source,
             "headline": _headline(event),
             "responseType": "Prepare" if event.requires_action else "Monitor",

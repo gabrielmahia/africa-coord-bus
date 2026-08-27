@@ -5,8 +5,9 @@ Built-in table for Kenya coordination domains.
 Designed to be extended by domain implementers.
 """
 from __future__ import annotations
+
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable
 
 from .event import CoordinationEvent, EventDomain, EventSeverity
 

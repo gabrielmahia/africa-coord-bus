@@ -17,11 +17,10 @@ import json
 import pathlib
 import threading
 from collections import defaultdict
-from typing import Callable
+from collections.abc import Callable
 
 from .event import CoordinationEvent, EventDomain
 from .routing import RoutingRules
-
 
 HandlerFn = Callable[[CoordinationEvent, list[str]], None]
 

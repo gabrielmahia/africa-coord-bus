@@ -1,12 +1,17 @@
 """Provenance fields — trust integrity made structural (declared, not sniffed)."""
-import sys
 import pathlib
+import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / "src"))
 
 from africa_coord_bus import (
-    CoordinationEvent, EventDomain, EventSeverity, EventReality, EventConfidence,
-    to_cap_dict, to_cap_xml,
+    CoordinationEvent,
+    EventConfidence,
+    EventDomain,
+    EventReality,
+    EventSeverity,
+    to_cap_dict,
+    to_cap_xml,
 )
 
 

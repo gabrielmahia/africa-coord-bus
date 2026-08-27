@@ -1,13 +1,22 @@
 """Tests: CRDT queue merge (algebraic laws) + HXL export + honesty-guarded IPC hint."""
-import sys
 import pathlib
+import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / "src"))
 
 from africa_coord_bus import (
-    CoordinationEvent, EventDomain, EventSeverity, KenyaLocation, SubnationalLocation,
-    merge_queues, read_queue, write_queue, dedupe,
-    to_hxl_row, hxl_header, ipc_severity_hint,
+    CoordinationEvent,
+    EventDomain,
+    EventSeverity,
+    KenyaLocation,
+    SubnationalLocation,
+    dedupe,
+    hxl_header,
+    ipc_severity_hint,
+    merge_queues,
+    read_queue,
+    to_hxl_row,
+    write_queue,
 )
 
 

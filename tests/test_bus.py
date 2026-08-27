@@ -1,12 +1,18 @@
 """Smoke tests for africa-coord-bus."""
-import sys
 import pathlib
+import sys
+
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / "src"))
 
 from africa_coord_bus import (
-    EventBus, CoordinationEvent, DomainCascade,
-    EventDomain, EventSeverity, KenyaLocation,
+    CoordinationEvent,
+    DomainCascade,
+    EventBus,
+    EventDomain,
+    EventSeverity,
+    KenyaLocation,
 )
+
 
 def test_drought_cascade():
     log = []

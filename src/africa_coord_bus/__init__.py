@@ -1,30 +1,53 @@
 """africa-coord-bus — Coordination event bus for East Africa MCP infrastructure."""
 __version__ = "0.4.0"
 
-from .event import CoordinationEvent, EventSeverity, EventDomain, KenyaLocation, SubnationalLocation, EventReality, EventConfidence
 from .bus import EventBus
-from .routing import RoutingRules, KENYA_ROUTING_TABLE, RoutingRule
+from .cap import to_cap_dict, to_cap_xml
 from .domains import DomainCascade
-from .cap import to_cap_xml, to_cap_dict
-from .interop import to_hxl_row, hxl_header, ipc_severity_hint
-from .queue import merge_queues, read_queue, write_queue, dedupe
+from .event import (
+    CoordinationEvent,
+    EventConfidence,
+    EventDomain,
+    EventReality,
+    EventSeverity,
+    KenyaLocation,
+    SubnationalLocation,
+)
+from .interop import hxl_header, ipc_severity_hint, to_hxl_row
+from .queue import dedupe, merge_queues, read_queue, write_queue
+from .routing import KENYA_ROUTING_TABLE, RoutingRule, RoutingRules
 
 __all__ = [
-    "TANZANIA_ROUTING_TABLE",
     "CROSS_BORDER_TABLE",
+    "KENYA_ROUTING_TABLE",
     "PORTABLE_PATTERNS",
+    "TANZANIA_ROUTING_TABLE",
+    "CoordinationEvent",
+    "DomainCascade",
+    "EventBus",
+    "EventConfidence",
+    "EventDomain",
+    "EventReality",
+    "EventSeverity",
+    "KenyaLocation",
+    "RoutingRule",
+    "RoutingRules",
+    "SubnationalLocation",
+    "dedupe",
+    "hxl_header",
+    "ipc_severity_hint",
+    "merge_queues",
+    "read_queue",
     "tanzania_rules",
-    "CoordinationEvent", "EventSeverity", "EventDomain", "KenyaLocation", "SubnationalLocation",
-    "EventReality", "EventConfidence",
-    "EventBus", "RoutingRules", "KENYA_ROUTING_TABLE", "RoutingRule", "DomainCascade",
-    "to_cap_xml", "to_cap_dict",
-    "to_hxl_row", "hxl_header", "ipc_severity_hint",
-    "merge_queues", "read_queue", "write_queue", "dedupe",
+    "to_cap_dict",
+    "to_cap_xml",
+    "to_hxl_row",
+    "write_queue",
 ]
 
-from .tanzania import (  # noqa: E402
-    TANZANIA_ROUTING_TABLE,
+from .tanzania import (
     CROSS_BORDER_TABLE,
     PORTABLE_PATTERNS,
+    TANZANIA_ROUTING_TABLE,
     tanzania_rules,
 )

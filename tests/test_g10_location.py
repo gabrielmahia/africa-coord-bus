@@ -6,8 +6,13 @@ no matter which location type flows through the bus.
 
 import json
 
-from africa_coord_bus import CoordinationEvent, EventDomain, EventSeverity
-from africa_coord_bus import KenyaLocation, SubnationalLocation
+from africa_coord_bus import (
+    CoordinationEvent,
+    EventDomain,
+    EventSeverity,
+    KenyaLocation,
+    SubnationalLocation,
+)
 
 
 def test_kenya_location_unchanged_roundtrip():

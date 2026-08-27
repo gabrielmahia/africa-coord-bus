@@ -1,7 +1,10 @@
 """Tests for the Tanzania routing table and cross-border cascades (G8)."""
 from africa_coord_bus.event import CoordinationEvent, EventDomain, EventSeverity
 from africa_coord_bus.tanzania import (
-    TANZANIA_ROUTING_TABLE, CROSS_BORDER_TABLE, PORTABLE_PATTERNS, tanzania_rules,
+    CROSS_BORDER_TABLE,
+    PORTABLE_PATTERNS,
+    TANZANIA_ROUTING_TABLE,
+    tanzania_rules,
 )
 
 

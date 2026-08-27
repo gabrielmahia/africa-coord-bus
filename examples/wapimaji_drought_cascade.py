@@ -10,9 +10,14 @@ Prerequisites:
     # wapimaji-mcp v0.1.3+ includes coordination.py
 """
 from africa_coord_bus import (
-    EventBus, CoordinationEvent, DomainCascade,
-    EventDomain, EventSeverity, KenyaLocation
+    CoordinationEvent,
+    DomainCascade,
+    EventBus,
+    EventDomain,
+    EventSeverity,
+    KenyaLocation,
 )
+
 
 def on_action(action: str, event):
     """Replace this with real MCP client calls in production."""

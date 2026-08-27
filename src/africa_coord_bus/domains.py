@@ -6,10 +6,10 @@ Domain implementers can swap in real MCP client calls.
 """
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
-from .event import CoordinationEvent, EventDomain
 from .bus import EventBus
+from .event import CoordinationEvent, EventDomain
 
 
 class DomainCascade:

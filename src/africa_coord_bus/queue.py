@@ -23,7 +23,7 @@ from __future__ import annotations
 
 import json
 import pathlib
-from typing import Iterable
+from collections.abc import Iterable
 
 _QueueSource = "str | pathlib.Path | Iterable[dict]"
 

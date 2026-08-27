@@ -23,7 +23,11 @@ from __future__ import annotations
 from xml.etree import ElementTree as ET
 
 from .event import (
-    CoordinationEvent, EventDomain, EventSeverity, EventReality, EventConfidence,
+    CoordinationEvent,
+    EventConfidence,
+    EventDomain,
+    EventReality,
+    EventSeverity,
 )
 
 # EventConfidence -> CAP <certainty> (Observed|Likely|Possible|Unlikely|Unknown)

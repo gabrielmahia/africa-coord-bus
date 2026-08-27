@@ -89,7 +89,7 @@ class SubnationalLocation:
 
     @classmethod
     def tanzania(cls, region: str = "", district: str = "",
-                 lat: float = 0.0, lon: float = 0.0) -> "SubnationalLocation":
+                 lat: float = 0.0, lon: float = 0.0) -> SubnationalLocation:
         """Convenience: mkoa (region) / wilaya (district)."""
         return cls(country="TZ", admin_1=region, admin_2=district, lat=lat, lon=lon)
 
@@ -199,7 +199,7 @@ class CoordinationEvent:
         }
 
     @classmethod
-    def from_dict(cls, d: dict) -> "CoordinationEvent":
+    def from_dict(cls, d: dict) -> CoordinationEvent:
         loc_data = d.get("location", {})
         loc: KenyaLocation | SubnationalLocation
         if "admin_1" in loc_data or "country" in loc_data:

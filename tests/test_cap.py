@@ -1,13 +1,18 @@
 """CAP 1.2 export tests — mapping correctness + trust-integrity (DEMO never Actual)."""
-import sys
 import pathlib
+import sys
 from xml.etree import ElementTree as ET
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent / "src"))
 
 from africa_coord_bus import (
-    CoordinationEvent, EventDomain, EventSeverity, KenyaLocation, SubnationalLocation,
-    to_cap_xml, to_cap_dict,
+    CoordinationEvent,
+    EventDomain,
+    EventSeverity,
+    KenyaLocation,
+    SubnationalLocation,
+    to_cap_dict,
+    to_cap_xml,
 )
 
 CAP_NS = "urn:oasis:names:tc:emergency:cap:1.2"

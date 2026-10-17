@@ -2,7 +2,7 @@
 
 **The coordination layer between East Africa's AI tools.**
 
-31 MCP servers exist for Kenya's coordination domains — payments, water, agriculture, health, land, education. They work in isolation. When `wapimaji-mcp` detects a drought six weeks in advance, `bima-mcp` doesn't know to evaluate parametric insurance payouts. `afya-mcp` doesn't know to activate malnutrition surveillance. `kilimo-mcp` doesn't know to issue drought-resistant crop advisories.
+MCP servers exist for Kenya's coordination domains — payments, water, agriculture, health, land, education. They work in isolation. When a drought signal is raised (today `wapimaji-mcp` produces simulated ones), `bima-mcp` doesn't know to evaluate parametric insurance payouts. `afya-mcp` doesn't know to activate malnutrition surveillance. `kilimo-mcp` doesn't know to issue drought-resistant crop advisories.
 
 This package provides the event bus that connects them.
 
@@ -28,17 +28,7 @@ Six weeks earlier. Before the damage is visible.
 
 ## AI Agent Compatibility
 
-Model-agnostic. Tested with:
-
-| Model | Notes |
-|-------|-------|
-| `claude-sonnet-5` | **Recommended** — completes drought→insurance→county cascades end-to-end |
-| `claude-opus-4-8` | Highest accuracy for complex multi-domain triage |
-| `gemini-flash` | High-volume, cost-sensitive routing |
-
-Sonnet 5 (2026-06-30) is the first Sonnet-class model that reliably
-finishes the full multi-server cascade without stopping mid-chain.
-
+Model-agnostic: any MCP-capable model can drive these tools. No model is recommended or certified here; keep a person approving consequential actions.
 
 ## Architecture: Shared Context Store (CA-MCP)
 
@@ -167,16 +157,16 @@ See [examples/wapimaji_drought_cascade.py](examples/wapimaji_drought_cascade.py)
 
 MIT licensed. Feedback via GitHub Issues only — pull requests are not accepted. Demo data is labeled DEMO and is not suitable for operational decisions. Full policy: [docs/architecture/IP_POLICY.md](docs/architecture/IP_POLICY.md). Security reports: see [SECURITY.md](SECURITY.md).
 
-<!-- interconnect:v1 -->
+<!-- interconnect:v2 -->
 ## Part of the East Africa coordination stack
 
-- **Install & run:** `pip install reli-cli && reli list` — 33 MCP servers on the [official MCP Registry](https://registry.modelcontextprotocol.io) under `io.github.gabrielmahia`
+- **Install & run:** `pip install reli-cli && reli list` — the MCP servers on the [official MCP Registry](https://registry.modelcontextprotocol.io) under `io.github.gabrielmahia`
 - **Evaluate any model on Swahili agent tasks:** [kipimo](https://github.com/gabrielmahia/kipimo) · [dataset](https://huggingface.co/datasets/gmahia/kipimo) · [leaderboard](https://huggingface.co/spaces/gmahia/kipimo-leaderboard)
 - **Coordinate across servers:** [africa-coord-bus](https://pypi.org/project/africa-coord-bus/) — offline-first event bus with a built-in Kenya routing table
 - **Datasets:** [huggingface.co/gmahia](https://huggingface.co/gmahia) · **Docs hub:** [nairobi-stack](https://github.com/gabrielmahia/nairobi-stack)
 
 Model-agnostic by design: closed APIs, open-weight models, and small distilled models are all first-class citizens.
-<!-- /interconnect:v1 -->
+<!-- /interconnect:v2 -->
 
 ## Interoperability: CAP 1.2 export
 

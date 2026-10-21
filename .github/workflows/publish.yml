@@ -1,13 +1,21 @@
 name: Publish
 
-permissions:
-  contents: read
+# Trusted Publishing (OIDC): no API token. One-time setup on PyPI (project africa-coord-bus, Publishing settings):
+# owner gabrielmahia, repository africa-coord-bus, workflow publish.yml, environment pypi.
 on:
   push:
     tags: ["v*"]
+permissions:
+  contents: read
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/africa-coord-bus
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -15,5 +23,3 @@ jobs:
       - run: pip install build
       - run: python -m build
       - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
@@ -177,7 +177,7 @@ class CoordinationEvent:
     requires_action:    bool           = False
     event_id:           str            = field(default_factory=lambda: str(uuid.uuid4()))
     timestamp:          str            = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
 
     def to_dict(self) -> dict:
@@ -225,5 +225,5 @@ class CoordinationEvent:
             basis=d.get("basis", ""),
             requires_action=d.get("requires_action", False),
             event_id=d.get("event_id", str(uuid.uuid4())),
-            timestamp=d.get("timestamp", datetime.now(timezone.utc).isoformat()),
+            timestamp=d.get("timestamp", datetime.now(UTC).isoformat()),
         )

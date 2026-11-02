@@ -4,17 +4,16 @@ build-backend = "hatchling.build"
 
 [project]
 name = "africa-coord-bus"
-version = "0.4.1"
+version = "0.4.2"
 description = "Coordination event bus connecting East Africa MCP servers — drought alerts cascade to insurance, health, and agricultural advisory in real time"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = "MIT"
 keywords = ["mcp","africa","coordination","event-bus","east-africa","drought","health","kenya"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",

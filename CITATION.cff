@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "africa-coord-bus"
+abstract: "Coordination event bus connecting East Africa MCP servers — drought alerts cascade to insurance, health, and agricultural advisory in real time"
+version: "0.4.3"
+authors:
+  - family-names: "Mahia"
+    given-names: "Gabriel"
+repository-code: "https://github.com/gabrielmahia/africa-coord-bus"
+license: "MIT"

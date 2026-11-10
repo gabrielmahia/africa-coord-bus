@@ -22,4 +22,4 @@ jobs:
         with: {python-version: "3.12"}
       - run: pip install build
       - run: python -m build
-      - uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086  # v1.14.3 (release/v1 on 2026-11-10)
